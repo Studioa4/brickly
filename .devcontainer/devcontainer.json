@@ -1,7 +1,7 @@
 {
   "name": "Brickly Dev Container",
   "image": "mcr.microsoft.com/devcontainers/typescript-node:18",
-  "postCreateCommand": "npm install",
+  "postCreateCommand": "npm install && chmod +x ./node_modules/.bin/*",
   "customizations": {
     "vscode": {
       "extensions": [
