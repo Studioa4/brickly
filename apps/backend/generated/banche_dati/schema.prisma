@@ -1,0 +1,15 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../generated/banche_dati"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_BANCHE_DATI")
+}
+
+model Fornitore {
+  id         Int    @id @default(autoincrement())
+  nome       String
+  partitaIva String
+}

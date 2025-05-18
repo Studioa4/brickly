@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../generated/operativo"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_OPERATIVO")
+}
+
+model Promemoria {
+  id      Int    @id @default(autoincrement())
+  titolo String
+}
+
+model Password {
+  id             String   @id @default(uuid())
+  username       String   @unique
+  codice_fiscale String
+  password_hash  String
+  ruolo          String?
+  token          String?
+  attivo         Boolean? @default(true)
+  created_at     DateTime? @default(now())
+  updated_at     DateTime? @updatedAt
+}

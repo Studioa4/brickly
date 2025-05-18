@@ -1,0 +1,9 @@
+.sidebar li {
+  color: #1a1a1a;
+  font-weight: 500;
+}
+.sidebar button:hover,
+.sidebar li:hover {
+  background-color: #1976d2;
+  color: white;
+}

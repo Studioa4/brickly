@@ -1,0 +1,25 @@
+/* Tema personalizzato Brickly per AG Grid */
+
+.ag-theme-brickly {
+  /* Font e dimensioni */
+  --ag-font-size: 12px;
+  --ag-font-family: "Segoe UI", Roboto, sans-serif;
+
+  /* Colori righe */
+  --ag-row-border-color: #e0e0e0;
+  --ag-odd-row-background-color: #f9f9f9;
+
+  /* Header */
+  --ag-header-background-color: #eaeaea;
+  --ag-header-foreground-color: #444;
+  --ag-header-height: 36px;
+
+  /* Hover */
+  --ag-row-hover-color: #f0f0f0;
+
+  /* Selezione */
+  --ag-selected-row-background-color: #d0eaff;
+
+  /* Righe alternate migliorate */
+  --ag-alpine-active-color: #0088cc;
+}

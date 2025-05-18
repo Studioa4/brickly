@@ -1,0 +1,99 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+.header {
+  background: #f3f3f3;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.main {
+  display: flex;
+  flex: 1;
+}
+.sidebar {
+  width: 250px;
+  background: #e0e0e0;
+  padding: 1rem;
+}
+.content {
+  flex: 1;
+  padding: 1rem;
+}
+.ai-box {
+  margin-left: auto;
+}
+.studio-select {
+  margin-left: 1rem;
+}
+
+
+/* LOGIN PAGE STYLING */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f5f6fa;
+}
+
+.login-box {
+  background: white;
+  padding: 2rem 3rem;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+}
+
+.login-field {
+  margin-bottom: 1rem;
+}
+
+.login-field label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+.login-field input {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.login-button {
+  width: 100%;
+  background-color: #3498db;
+  color: white;
+  padding: 0.7rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.login-button:hover {
+  background-color: #2980b9;
+}
+
+.login-error {
+  color: red;
+  margin-top: 0.5rem;
+  text-align: center;
+}

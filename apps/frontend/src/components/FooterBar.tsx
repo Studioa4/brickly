@@ -1,0 +1,1 @@
+export default () => <footer className='bg-gray-100 border-t border-gray-300 text-xs text-gray-700 px-6 py-1 h-12 flex justify-between items-center'>Footer placeholder</footer>;
