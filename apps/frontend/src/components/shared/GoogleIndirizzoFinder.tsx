@@ -1,21 +1,20 @@
-// src/components/shared/GoogleIndirizzoFinder.tsx
-
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-  DialogDescription
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useJsApiLoader, GoogleMap, Marker } from "@react-google-maps/api";
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import { useRef, useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { estraiDatiDaAddressComponents } from "@/utils/estraiDatiIndirizzo";
 
 const defaultPos = { lat: 41.9028, lng: 12.4964 };
-const LIBRARIES: ("places")[] = ["places"];
+const LIBRARIES = ["places"];
+const createLatLng = (lat, lng) => ({ lat: Number(lat), lng: Number(lng) });
 
 export default function GoogleIndirizzoFinder({ open, onClose, onConferma }) {
   const { isLoaded } = useJsApiLoader({
@@ -24,56 +23,116 @@ export default function GoogleIndirizzoFinder({ open, onClose, onConferma }) {
     language: "it",
   });
 
+  const inputRef = useRef(null);
+  const autocompleteRef = useRef(null);
   const mapRef = useRef(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const autocompleteRef = useRef<any>(null);
 
   const [searchInput, setSearchInput] = useState("");
-  const [location, setLocation] = useState(defaultPos);
+  const [location, setLocation] = useState(createLatLng(defaultPos.lat, defaultPos.lng));
   const [address, setAddress] = useState({
     indirizzo: "",
     cap: "",
     comune: "",
     provincia: "",
+    stato: "", // 👈 questo
     latitudine: null,
     longitudine: null,
   });
 
+const handlePlace = (place) => {
+  if (!place?.geometry?.location) {
+    toast.error("Indirizzo non valido o non geolocalizzabile");
+    return;
+  }
+
+  const lat = place.geometry.location.lat();
+  const lng = place.geometry.location.lng();
+  const dati = estraiDatiDaAddressComponents(place.address_components);
+
+  const isItaly = dati.stato?.toLowerCase() === "italia";
+  const newLocation = { lat: Number(lat), lng: Number(lng) };
+
+  setLocation(newLocation);
+
+  if (mapRef.current) {
+    mapRef.current.panTo(newLocation);
+  }
+
+  setAddress({
+    indirizzo: place.formatted_address,
+    cap: dati.cap,
+    comune: dati.comune,
+    provincia: isItaly ? dati.provincia : "EE",
+    stato: dati.stato,
+    latitudine: lat,
+    longitudine: lng,
+  });
+
+  setSearchInput(place.formatted_address);
+};
+
   useEffect(() => {
-    if (!isLoaded || !inputRef.current || autocompleteRef.current) return;
+    if (!open) autocompleteRef.current = null;
+  }, [open]);
 
-    autocompleteRef.current = new window.google.maps.places.Autocomplete(
-      inputRef.current,
-      {
-        fields: ["geometry", "formatted_address", "address_components"],
+  useEffect(() => {
+    if (!isLoaded || !open) return;
+    let pollingTimeout;
+
+    const initAutocomplete = () => {
+      if (window.google?.maps?.places && inputRef.current && !autocompleteRef.current) {
+        autocompleteRef.current = new window.google.maps.places.Autocomplete(inputRef.current, {
+          fields: ["geometry", "formatted_address", "address_components"],
+        });
+
+        const pollPlace = () => {
+          pollingTimeout = setTimeout(() => {
+            const place = autocompleteRef.current.getPlace();
+            if (place?.geometry?.location) handlePlace(place);
+          }, 200);
+        };
+
+        autocompleteRef.current.addListener("place_changed", () => {
+          const place = autocompleteRef.current.getPlace();
+          handlePlace(place);
+        });
+
+        inputRef.current.addEventListener("blur", pollPlace);
+        inputRef.current.addEventListener("mousedown", pollPlace);
+        inputRef.current.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            pollPlace();
+          }
+        });
       }
-    );
+    };
 
-    autocompleteRef.current.addListener("place_changed", () => {
-      const place = autocompleteRef.current.getPlace();
-
-      if (!place?.geometry?.location) {
-        toast.error("Indirizzo non valido o non geolocalizzabile");
-        return;
-      }
-
-      const lat = place.geometry.location.lat();
-      const lng = place.geometry.location.lng();
-      const dati = estraiDatiDaAddressComponents(place.address_components);
-
-      setLocation({ lat, lng });
-      setAddress({
-        indirizzo: place.formatted_address,
-        cap: dati.cap,
-        comune: dati.comune,
-        provincia: dati.provincia,
-        latitudine: lat,
-        longitudine: lng,
+    const timeout = setTimeout(() => {
+      requestAnimationFrame(() => {
+        initAutocomplete();
       });
+    }, 300);
 
-      setSearchInput(place.formatted_address);
+    return () => {
+      clearTimeout(timeout);
+      clearTimeout(pollingTimeout);
+    };
+  }, [isLoaded, open]);
+
+  const handleAnnulla = () => {
+    setSearchInput("");
+    setAddress({
+      indirizzo: "",
+      cap: "",
+      comune: "",
+      provincia: "",
+      latitudine: null,
+      longitudine: null,
     });
-  }, [isLoaded]);
+    setLocation(createLatLng(defaultPos.lat, defaultPos.lng));
+    onClose();
+  };
 
   if (!isLoaded) return null;
 
@@ -100,13 +159,14 @@ export default function GoogleIndirizzoFinder({ open, onClose, onConferma }) {
             <GoogleMap
               center={location}
               zoom={16}
-              mapContainerStyle={{ width: "100%", height: "100%" }}
               onLoad={(map) => (mapRef.current = map)}
+              mapContainerStyle={{ width: "100%", height: "100%" }}
               onClick={(e) => {
                 const lat = e.latLng?.lat();
                 const lng = e.latLng?.lng();
                 if (lat && lng) {
-                  setLocation({ lat, lng });
+                  const pos = createLatLng(lat, lng);
+                  setLocation(pos);
                   setAddress((prev) => ({
                     ...prev,
                     latitudine: lat,
@@ -116,13 +176,17 @@ export default function GoogleIndirizzoFinder({ open, onClose, onConferma }) {
               }}
             >
               <Marker
+                key={`dynamic-${location.lat}-${location.lng}`}
                 position={location}
                 draggable={true}
+                icon="http://maps.google.com/mapfiles/ms/icons/red-dot.png"
                 onDragEnd={(e) => {
                   const lat = e.latLng?.lat();
                   const lng = e.latLng?.lng();
+                  console.log("🟢 Marker spostato:", lat, lng);
                   if (lat && lng) {
-                    setLocation({ lat, lng });
+                    const pos = createLatLng(lat, lng);
+                    setLocation(pos);
                     setAddress((prev) => ({
                       ...prev,
                       latitudine: lat,
@@ -136,7 +200,7 @@ export default function GoogleIndirizzoFinder({ open, onClose, onConferma }) {
         </div>
 
         <DialogFooter className="mt-4">
-          <Button variant="secondary" onClick={onClose}>
+          <Button variant="secondary" onClick={handleAnnulla}>
             Annulla
           </Button>
           <Button

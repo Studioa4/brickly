@@ -2,9 +2,10 @@
   "name": "brickly-v2",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"npm --prefix apps/frontend run dev\" \"npm --prefix apps/backend run dev\""
+    "dev": "concurrently \"npm --prefix apps/backend run dev\" \"wait-on tcp:3000 && npm --prefix apps/frontend run dev\" \"npm --prefix apps/electron run electron\""
   },
   "devDependencies": {
-    "concurrently": "^8.0.1"
+    "concurrently": "^8.2.2",
+    "wait-on": "^7.2.0"
   }
 }

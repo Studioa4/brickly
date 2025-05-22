@@ -11,6 +11,7 @@ import { queryClient } from './lib/queryClient';
 import './styles/ag-theme-brickly.css';
 import 'react-toastify/dist/ReactToastify.css';
 import './index.css';
+import "leaflet/dist/leaflet.css";
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

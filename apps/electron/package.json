@@ -1,0 +1,15 @@
+{
+  "name": "brickly-electron",
+  "version": "1.0.0",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "electron --no-sandbox dist/main.js"
+  },
+  "dependencies": {
+    "electron": "^27.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  }
+}

@@ -10,9 +10,9 @@ import LayoutSwitcher from "./components/LayoutSwitcher";
 import AppLayout from "./components/AppLayout";
 
 import Dashboard from "./pages/Dashboard";
-import Catasto from "./pages/catasto";
-import Anagrafiche from "./pages/anagrafiche";
-import FornitoriTable from "./pages/fornitoritable";
+import AccessoEdra from "@/pages/banchedati/AccessoEdra";
+import Anagrafiche from "@/pages/banchedati/anagrafiche";
+import FornitoriTable from "./pages/FornitoriTable";
 import Provinceecomuni from "./pages/province-e-comuni";
 import Tabellefiscali from "./pages/tabelle-fiscali";
 import Datigenerali from "./pages/dati-generali";
@@ -41,7 +41,7 @@ import Preventivoindividuale from "./pages/preventivo-individuale";
 import Situazionepatrimoniale from "./pages/situazione-patrimoniale";
 import Riepilogofinanziario from "./pages/riepilogo-finanziario";
 import Notaesplicativasintetica from "./pages/nota-esplicativa-sintetica";
-import Impianti from "./pages/impianti";
+import PaginaImpianti from "@/pages/particomuni/PaginaImpianti";
 import Sesamo from "./pages/sesamo";
 import Interventi from "./pages/interventi";
 import Contatori from "./pages/contatori";
@@ -75,6 +75,10 @@ import "react-toastify/dist/ReactToastify.css";
 
 import DatiGeneraliCondominio from "@/pages/condomini/DatiGeneraliCondominio";
 import PaginaCondomini from "@/pages/condomini/PaginaCondomini";
+import StrutturaCondominio from "@/pages/condomini/StrutturaCondominio";
+import TestVerifica from "@/pages/test-verifica";
+import ModuliAggiuntivi from "@/pages/impostazioni/ModuliAggiuntivi";
+
 const App = () => {
   const { loading: authLoading } = useAuth();
 
@@ -107,8 +111,8 @@ const App = () => {
         }
       >
         <Route path="dashboard" element={<Dashboard />} />
-        <Route path="catasto" element={<Catasto />} />
-        <Route path="anagrafiche" element={<Anagrafiche />} />
+        <Route path="/banchedati/accesso-edra" element={<AccessoEdra />} />
+        <Route path="/banchedati/anagrafiche" element={<Anagrafiche />} />
         <Route path="fornitori" element={<FornitoriTable />} />
         <Route path="province-e-comuni" element={<Provinceecomuni />} />
         <Route path="tabelle-fiscali" element={<Tabellefiscali />} />
@@ -138,7 +142,7 @@ const App = () => {
         <Route path="situazione-patrimoniale" element={<Situazionepatrimoniale />} />
         <Route path="riepilogo-finanziario" element={<Riepilogofinanziario />} />
         <Route path="nota-esplicativa-sintetica" element={<Notaesplicativasintetica />} />
-        <Route path="impianti" element={<Impianti />} />
+        <Route path="/parti-comuni/impianti" element={<PaginaImpianti />} />
         <Route path="sesamo" element={<Sesamo />} />
         <Route path="interventi" element={<Interventi />} />
         <Route path="contatori" element={<Contatori />} />
@@ -163,6 +167,9 @@ const App = () => {
         <Route path="stampe-in-sequenza" element={<Stampeinsequenza />} />
         <Route path="/condomini/dati-generali" element={<DatiGeneraliCondominio />} />
         <Route path="/condomini" element={<PaginaCondomini />} />
+        <Route path="/condomini/struttura" element={<StrutturaCondominio />} />
+        <Route path="/test-verifica" element={<TestVerifica />} />
+        <Route path="/impostazioni/moduli" element={<ModuliAggiuntivi />} />
       </Route>
     </Routes>
 

@@ -1,15 +1,25 @@
-// src/utils/estraiDatiIndirizzo.ts
+export function estraiDatiDaAddressComponents(components) {
+  const dati = {
+    cap: "",
+    comune: "",
+    provincia: "",
+    stato: "",
+  };
 
-export function estraiDatiDaAddressComponents(components: any[]) {
-  let cap = "";
-  let comune = "";
-  let provincia = "";
-
-  for (const comp of components) {
-    if (comp.types.includes("postal_code")) cap = comp.long_name;
-    if (comp.types.includes("locality")) comune = comp.long_name;
-    if (comp.types.includes("administrative_area_level_2")) provincia = comp.short_name;
+  for (const component of components) {
+    if (component.types.includes("postal_code")) {
+      dati.cap = component.long_name;
+    }
+    if (component.types.includes("locality")) {
+      dati.comune = component.long_name;
+    }
+    if (component.types.includes("administrative_area_level_2")) {
+      dati.provincia = component.short_name;
+    }
+    if (component.types.includes("country")) {
+      dati.stato = component.long_name; // es: "Italia", "France", "Germany"
+    }
   }
 
-  return { cap, comune, provincia };
+  return dati;
 }

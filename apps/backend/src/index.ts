@@ -1,3 +1,4 @@
+import checkCFRouter from "./routes/checkCodiceFiscale";
 import dotenv from 'dotenv';
 dotenv.config();
 import anagraficheRouter from './routes/anagrafiche';
@@ -39,22 +40,47 @@ import verificaUtenteRouter from './routes/verificaCodiceFiscaleCompleta';
 import anagraficheBD from './routes/anagraficheBancheDati';
 import anagraficheOp from './routes/anagraficheOperativo';
 import condominiEmailRouter from './routes/condomini-email';
+import partiComuniRoutes from "./routes/partiComuni";
+import impiantiRoutes from "./routes/impianti";
+import anagraficheBDRoute from "./routes/anagrafiche-banche-dati";
+import comuniRoute from "./routes/comuni-by-codice-catastale";
+import checkAnagraficaCFRoute from "./routes/anagrafiche-banche-dati-check-cf";
+import edraRoutes from "./routes/edra";
 
 const app = express();
 
-app.use(cors());
+// ✅ CORS per Codespaces
+const corsOrigin =
+  process.env.NODE_ENV === "production"
+    ? "https://app.brickly.cloud"
+    : "https://upgraded-couscous-wrx49w9gpxrj25q56-5173.app.github.dev";
+
+app.use(cors({
+  origin: corsOrigin,
+  credentials: true,
+}));
+
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", corsOrigin);
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
+
 app.use(express.json());
 
-// 🔐 Middleware mock req.utente
+// 🔐 Mock user temporaneo
 app.use((req, res, next) => {
-  // @ts-ignore
   req.utente = {
     id: 'mock-id',
     is_superadmin: true,
-    id_studio_corrente: 'mock-studio-id'
+    id_studio_corrente: 'mock-studio-id',
   };
   next();
 });
+app.use("/api/pub/condomini/check-cf", checkCFRouter); // completamente pubblico
+
+// ✅ Route pubblica: verifica codice fiscale condominio
 
 app.use('/api/password', passwordRouter);
 app.use('/api', studiUtenteEmailRouter);
@@ -73,16 +99,17 @@ app.use('/api/superadmin/bootstrap-create', bootstrapCreateRouter);
 app.use('/api/superadmin/force-bootstrap', forceBootstrap);
 app.use('/api/profile', profileRouter);
 
-// 👇 route NON protetta: /api/condomini?email=...
+// 👇 route NON protetta: solo se ?email è presente
 app.use('/api/condomini', (req, res, next) => {
+  const url = req.url || '';
   if (req.method === 'GET' && req.query.email) {
-    // bypassa authMiddleware se si sta usando la rotta via email
+    console.log("✅ BYPASS authMiddleware per /api/condomini?email");
     return condominiRouter(req, res, next);
   }
   next();
 });
 
-// 👇 tutte le altre /api/condomini passano da authMiddleware
+// 👇 tutte le altre passano da authMiddleware
 app.use('/api/condomini', authMiddleware, condominiRouter);
 
 app.use('/api/studi-utente-by-email', studiUtenteEmailRouter);
@@ -110,7 +137,14 @@ app.use('/api/reset-password', resetPasswordRouter);
 app.use("/api", verificaUtenteRouter);
 app.use('/api/condomini-email', condominiEmailRouter); // ✅ route pubblica
 app.use('/api/test-token', authMiddleware, testTokenRouter);
-const PORT = process.env.PORT || 3000;
+app.use("/api/parti-comuni", partiComuniRoutes);
+app.use("/api/impianti", impiantiRoutes);
+app.use("/api/anagrafiche-banche-dati", anagraficheBDRoute);
+app.use("/api/comuni-by-codice-catastale", comuniRoute);
+app.use("/api/anagrafiche-banche-dati/check-cf", checkAnagraficaCFRoute);
+app.use("/api", edraRoutes); // 👈 questo collega le rotte a /api/*
+
+const PORT = Number(process.env.PORT) || 3000;
 app.listen(PORT, () => {
-  console.log(`Backend in ascolto su http://localhost:${PORT}`);
+  console.log(`✅ Backend in ascolto su http://localhost:${PORT}`);
 });

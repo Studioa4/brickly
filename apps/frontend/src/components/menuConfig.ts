@@ -4,12 +4,12 @@ export const menu = [
     "icon": "📚",
     "children": [
       {
-        "label": "Catasto",
-        "to": "/catasto"
+        "label": "Edra",
+         to: "/banchedati/accesso-edra"
       },
       {
         "label": "Anagrafiche",
-        "to": "/anagrafiche"
+        "to": "/banchedati/anagrafiche"
       },
       {
         "label": "Fornitori",
@@ -35,7 +35,7 @@ export const menu = [
       },
       {
         "label": "Struttura",
-        "to": "/struttura"
+        "to": "/condomini/struttura"
       },
       {
         "label": "Risorse e fondi",
@@ -196,7 +196,7 @@ export const menu = [
     "children": [
       {
         "label": "Impianti",
-        "to": "/impianti"
+        "to": "/parti-comuni/impianti"
       },
       {
         "label": "Sesamo",
@@ -350,27 +350,33 @@ export const menu = [
   },
 
   // ✅ Nuova sezione: Impostazioni
-  {
-    label: "Impostazioni",
-    icon: "⚙️",
-    children: [
-      {
-        label: "Studi",
-        to: "/impostazioni/studi",
-        visibleTo: ["superadmin"]
-      },
-      {
-        label: "Studio",
-        to: "/impostazioni/studio",
-        visibleTo: ["admin", "superadmin"]
-      },
-      {
-        label: "Utente",
-        to: "/impostazioni/utente",
-        visibleTo: ["admin", "operatore", "superadmin"]
-      }
-    ]
-  }
+{
+  label: "Impostazioni",
+  icon: "⚙️",
+  children: [
+    {
+      label: "Studi",
+      to: "/impostazioni/studi",
+      visibleTo: ["superadmin"]
+    },
+    {
+      label: "Studio",
+      to: "/impostazioni/studio",
+      visibleTo: ["admin", "superadmin"]
+    },
+    {
+      label: "Utente",
+      to: "/impostazioni/utente",
+      visibleTo: ["admin", "operatore", "superadmin"]
+    },
+    {
+      label: "Moduli aggiuntivi",
+      to: "/impostazioni/moduli",
+      visibleTo: ["admin", "superadmin"]
+    }
+  ]
+}
+
   
 
 ];

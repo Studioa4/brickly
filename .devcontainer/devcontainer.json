@@ -12,5 +12,12 @@
     }
   },
   "forwardPorts": [5173, 3000],
+  "portsAttributes": {
+    "3000": {
+      "label": "Brickly Backend",
+      "onAutoForward": "openBrowser",
+      "visibility": "public"
+    }
+  },
   "remoteUser": "node"
 }

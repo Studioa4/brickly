@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import BricklyGrid from "@/components/BricklyGrid";
+import BricklyGrid from "@/components/bricklygrid";
 
 interface Props {
   studioId: string;

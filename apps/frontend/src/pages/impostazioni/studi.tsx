@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import BricklyGrid from "@/components/BricklyGrid";
+import BricklyGrid from "@/components/bricklygrid";
 
 export default function PaginaStudi() {
   const [studi, setStudi] = useState<any[]>([]);
